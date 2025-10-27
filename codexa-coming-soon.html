@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codexa - Coming Soon</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0a0a;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            color: #fff;
+        }
+
+        .code-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            opacity: 0.15;
+            z-index: 0;
+        }
+
+        .code-line {
+            position: absolute;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #00ff00;
+            white-space: nowrap;
+            animation: slideCode 20s linear infinite;
+        }
+
+        @keyframes slideCode {
+            0% {
+                transform: translateX(100vw);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 900px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .terminal-window {
+            background: rgba(20, 20, 20, 0.9);
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 3rem 2rem;
+            box-shadow: 0 0 50px rgba(0, 255, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .terminal-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 2rem;
+            justify-content: flex-start;
+        }
+
+        .terminal-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-button.red { background: #ff5f56; }
+        .terminal-button.yellow { background: #ffbd2e; }
+        .terminal-button.green { background: #27c93f; }
+
+        .logo {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #00ff00;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            animation: glitch 3s infinite;
+            font-family: 'Courier New', monospace;
+        }
+
+        @keyframes glitch {
+            0%, 90%, 100% {
+                text-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            }
+            92% {
+                text-shadow: 0 0 20px rgba(0, 255, 0, 0.8), 2px 2px #ff00ff;
+            }
+            94% {
+                text-shadow: 0 0 20px rgba(0, 255, 0, 0.8), -2px -2px #00ffff;
+            }
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 3px;
+            height: 60px;
+            background: #00ff00;
+            animation: blink 1s infinite;
+            margin-left: 5px;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .tagline {
+            font-size: 1.3rem;
+            color: #888;
+            margin-bottom: 2rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .typing-text {
+            font-size: 1.1rem;
+            color: #0f0;
+            margin-bottom: 3rem;
+            min-height: 60px;
+            font-family: 'Courier New', monospace;
+            text-align: left;
+            padding: 0 1rem;
+        }
+
+        .typing-text::before {
+            content: '> ';
+            color: #00ff00;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature {
+            background: rgba(0, 255, 0, 0.05);
+            border: 1px solid #00ff00;
+            padding: 1.5rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .feature:hover::before {
+            left: 100%;
+        }
+
+        .feature:hover {
+            background: rgba(0, 255, 0, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 255, 0, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-text {
+            color: #00ff00;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+
+        .status-text {
+            font-size: 1.2rem;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 1rem;
+        }
+
+        .loading-bar {
+            width: 300px;
+            height: 4px;
+            background: #222;
+            margin: 2rem auto;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .loading-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff00, #00cc00);
+            width: 0%;
+            animation: loading 3s ease-in-out infinite;
+            box-shadow: 0 0 10px #00ff00;
+        }
+
+        @keyframes loading {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 0%; }
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 3rem;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 255, 0, 0.05);
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00ff00;
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: rgba(0, 255, 0, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.3);
+        }
+
+        .matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+
+            .cursor {
+                height: 40px;
+            }
+
+            .tagline {
+                font-size: 1rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas class="matrix-rain" id="matrixCanvas"></canvas>
+
+    <div class="code-background" id="codeBackground"></div>
+    
+    <div class="container">
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <div class="terminal-button red"></div>
+                <div class="terminal-button yellow"></div>
+                <div class="terminal-button green"></div>
+            </div>
+
+            <h1 class="logo">CODEXA<span class="cursor"></span></h1>
+            <p class="tagline">// Elevate Your Coding Journey</p>
+            
+            <div class="typing-text" id="typingText"></div>
+
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">💡</div>
+                    <div class="feature-text">Smart Problems</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-text">Real-time Execution</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🏆</div>
+                    <div class="feature-text">Compete & Learn</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-text">Track Progress</div>
+                </div>
+            </div>
+
+            <p class="status-text">System.status: Building something awesome...</p>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+
+            <div class="social-links">
+                <a href="#" class="social-link" title="Twitter">𝕏</a>
+                <a href="#" class="social-link" title="GitHub">⌘</a>
+                <a href="#" class="social-link" title="LinkedIn">in</a>
+                <a href="#" class="social-link" title="Discord">◆</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Matrix rain effect
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#0f0';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 35);
+
+        // Animated code lines in background
+        const codeSnippets = [
+            'function solve(arr) { return arr.sort(); }',
+            'class Node { constructor(val) { this.val = val; } }',
+            'const binarySearch = (arr, target) => {...}',
+            'for (let i = 0; i < n; i++) { dp[i] = Math.max(...); }',
+            'if (left < right) { merge(arr, left, mid, right); }',
+            'while (queue.length > 0) { const node = queue.shift(); }',
+            'return memo[n] = fibonacci(n-1) + fibonacci(n-2);',
+            'graph[u].push(v); graph[v].push(u);'
+        ];
+
+        const codeBackground = document.getElementById('codeBackground');
+        
+        function createCodeLine() {
+            const line = document.createElement('div');
+            line.className = 'code-line';
+            line.textContent = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+            line.style.top = Math.random() * 100 + '%';
+            line.style.animationDuration = (15 + Math.random() * 10) + 's';
+            line.style.animationDelay = Math.random() * 5 + 's';
+            codeBackground.appendChild(line);
+
+            setTimeout(() => line.remove(), 25000);
+        }
+
+        setInterval(createCodeLine, 3000);
+        for (let i = 0; i < 5; i++) createCodeLine();
+
+        // Typing animation
+        const phrases = [
+            'Initializing code compiler...',
+            'Loading problem sets...',
+            'Configuring test cases...',
+            'Preparing execution environment...',
+            'Building the future of coding practice...'
+        ];
+
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let currentPhrase = '';
+        let isDeleting = false;
+
+        function typeText() {
+            const typingElement = document.getElementById('typingText');
+            
+            if (isDeleting) {
+                currentPhrase = phrases[phraseIndex].substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                currentPhrase = phrases[phraseIndex].substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            typingElement.textContent = currentPhrase;
+
+            let typeSpeed = isDeleting ? 50 : 100;
+
+            if (!isDeleting && charIndex === phrases[phraseIndex].length) {
+                typeSpeed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+                typeSpeed = 500;
+            }
+
+            setTimeout(typeText, typeSpeed);
+        }
+
+        typeText();
+
+        // Resize canvas on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
